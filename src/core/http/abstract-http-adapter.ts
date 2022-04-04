@@ -1,7 +1,6 @@
 import { RequestMethod } from "@enums/request-method.enum";
 import { CorsOptions } from "@interfaces/external/cors-options.interface";
 import {
-    ErrorHandler,
     HttpServer,
     MiddlewareFactory,
     RequestHandler,
@@ -70,15 +69,8 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
         return this.instance.all(path, handler, ...rest);
     }
 
-    public use(
-        handler: RequestHandler<TRequest, TResponse> | ErrorHandler<TRequest, TResponse>,
-    ): any;
-    public use(
-        path: string,
-        handler: RequestHandler<TRequest, TResponse> | ErrorHandler<TRequest, TResponse>,
-    ): any;
-    public use(path: any, handler?: any): any {
-        return this.instance.use(path, handler);
+    public use(...args: any[]): any {
+        return this.instance.use(...args);
     }
 
     public listen(port: number): void;

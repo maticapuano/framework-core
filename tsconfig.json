@@ -15,6 +15,7 @@
         "experimentalDecorators": true,
         "baseUrl": "./src",
         "paths": {
+            "@core/*": ["core/*"],
             "@interfaces/*": ["interfaces/*"],
             "@enums/*": ["enums/*"],
             "@utils/*": ["utils/*"]
