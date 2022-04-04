@@ -46,7 +46,6 @@ export interface HttpServer<TRequest = any, TResponse = any> {
         path: string,
         handler: RequestHandler<TRequest, TResponse> | ErrorHandler<TRequest, TResponse>,
     ): any;
-    set(key: string, value: any): any;
     listen(port: number): void;
     listen(port: number, callback: () => void): void;
     listen(port: number | string): void;
