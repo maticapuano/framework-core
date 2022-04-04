@@ -12,6 +12,11 @@
         "skipDefaultLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "baseUrl": "./src",
+        "paths": {
+            "@interfaces/*": ["interfaces/*"],
+            "@enums/*": ["enums/*"]
+        }
     }
 }
