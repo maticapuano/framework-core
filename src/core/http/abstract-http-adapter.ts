@@ -89,15 +89,12 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
         this.instance.listen(port, callback);
     }
 
-    public setParserMiddleware(): void {
-        throw new Error("Method not implemented.");
-    }
-
     public getInstance<T = any>(): T {
         return this.instance as T;
     }
 
     abstract initHttpServer(): void;
+    abstract setParserMiddleware(): void;
     abstract close(): void;
     abstract enabledCors(options: CorsOptions): void;
     abstract createMiddlewareFactory(method: RequestMethod): MiddlewareFactory;

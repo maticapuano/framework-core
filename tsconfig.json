@@ -16,7 +16,8 @@
         "baseUrl": "./src",
         "paths": {
             "@interfaces/*": ["interfaces/*"],
-            "@enums/*": ["enums/*"]
+            "@enums/*": ["enums/*"],
+            "@utils/*": ["utils/*"]
         }
     }
 }
