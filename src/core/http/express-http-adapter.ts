@@ -1,13 +1,13 @@
 import { RequestMethod } from "@enums/request-method.enum";
 import { CorsOptions } from "@interfaces/external/cors-options.interface";
 import { MiddlewareFactory } from "@interfaces/http/http-server.interface";
-import express, { RequestHandler } from "express";
+import express, { Request, RequestHandler, Response } from "express";
 import { AbstractHttpAdapter } from "./abstract-http-adapter";
 import http from "http";
 import cors from "cors";
 import { RouterMethodFactory } from "@utils/router-method-factory";
 
-export class ExpressHttpAdapter extends AbstractHttpAdapter {
+export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Response> {
     private routerMethodFactory: RouterMethodFactory;
 
     public constructor() {
