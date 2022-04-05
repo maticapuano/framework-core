@@ -7,6 +7,9 @@ import http from "http";
 import cors from "cors";
 import { RouterMethodFactory } from "@utils/router-method-factory";
 import { ServeStaticOptions } from "@interfaces/http/serve-static-options.interface";
+import { NotFoundException } from "@exceptions/http/not-found.exception";
+import { AbstractHttpException } from "@exceptions/http/abstract-http.exception";
+import { InternalServerErrorException } from "@exceptions/http/internal-server-error.exception";
 
 export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Response> {
     private routerMethodFactory: RouterMethodFactory;
@@ -49,11 +52,23 @@ export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Respon
     }
 
     public setErrorHandler(): void {
-        throw new Error("Method not implemented.");
+        const handler = (err: any, req: Request, res: Response, _next: any): Response => {
+            if (err instanceof AbstractHttpException) {
+                return res.status(err.getStatusCode()).json(err.getResponse());
+            }
+
+            const internal = new InternalServerErrorException("Internal server error");
+
+            return res.status(internal.getStatusCode()).json(internal.getResponse());
+        };
+
+        this.use(handler);
     }
 
     public setNotFoundHandler(): void {
-        throw new Error("Method not implemented.");
+        this.all("*", () => {
+            throw new NotFoundException("Resource not found");
+        });
     }
 
     public getLocal(key: string): any;
