@@ -5,6 +5,7 @@ import {
     MiddlewareFactory,
     RequestHandler,
 } from "@interfaces/http/http-server.interface";
+import { ServeStaticOptions } from "@interfaces/http/serve-static-options.interface";
 
 export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TResponse = any>
     implements HttpServer<TRequest, TResponse>
@@ -92,4 +93,9 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     abstract createMiddlewareFactory(method: RequestMethod): MiddlewareFactory;
     abstract setErrorHandler(): void;
     abstract setNotFoundHandler(): void;
+    abstract getLocal(key: string): any;
+    abstract getLocal<T>(key: string): T;
+    abstract getLocal<T>(key: string, defaultValue: T): T;
+    abstract setLocal(key: string, value: any): this;
+    abstract useStaticAssets(path: string, options: ServeStaticOptions): void;
 }

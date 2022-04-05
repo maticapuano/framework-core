@@ -6,6 +6,7 @@ import { AbstractHttpAdapter } from "./abstract-http-adapter";
 import http from "http";
 import cors from "cors";
 import { RouterMethodFactory } from "@utils/router-method-factory";
+import { ServeStaticOptions } from "@interfaces/http/serve-static-options.interface";
 
 export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Response> {
     private routerMethodFactory: RouterMethodFactory;
@@ -33,7 +34,7 @@ export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Respon
     }
 
     public createMiddlewareFactory(method: RequestMethod): MiddlewareFactory {
-        const factory = this.routerMethodFactory.create(this, method);
+        const factory = this.routerMethodFactory.create(this.instance, method);
 
         return factory.bind(this.instance);
     }
@@ -53,5 +54,24 @@ export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Respon
 
     public setNotFoundHandler(): void {
         throw new Error("Method not implemented.");
+    }
+
+    public getLocal(key: string): any;
+    public getLocal<T>(key: string): T;
+    public getLocal<T>(key: string, defaultValue: T): T;
+    public getLocal(key: any, defaultValue?: any): any {
+        return this.instance.locals[key] || defaultValue;
+    }
+
+    public setLocal(key: string, value: any): this {
+        this.instance.locals[key] = value;
+
+        return this;
+    }
+
+    public useStaticAssets(path: string, options: ServeStaticOptions): void {
+        options.prefix
+            ? this.instance.use(options.prefix, express.static(path, options))
+            : this.instance.use(express.static(path, options));
     }
 }

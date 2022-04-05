@@ -1,5 +1,6 @@
 import { CorsOptions } from "@interfaces/external/cors-options.interface";
 import { RequestMethod } from "enums/request-method.enum";
+import { ServeStaticOptions } from "./serve-static-options.interface";
 
 export type ErrorHandler<TRequest = any, TResponse = any> = (
     error: any,
@@ -58,4 +59,9 @@ export interface HttpServer<TRequest = any, TResponse = any> {
     createMiddlewareFactory(method: RequestMethod): MiddlewareFactory;
     setErrorHandler(): void;
     setNotFoundHandler(): void;
+    useStaticAssets(path: string, options: ServeStaticOptions): void;
+    setLocal(key: string, value: any): this;
+    getLocal(key: string): any;
+    getLocal<T>(key: string): T;
+    getLocal<T>(key: string, defaultValue: T): T;
 }
