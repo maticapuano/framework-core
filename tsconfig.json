@@ -18,7 +18,8 @@
             "@core/*": ["core/*"],
             "@interfaces/*": ["interfaces/*"],
             "@enums/*": ["enums/*"],
-            "@utils/*": ["utils/*"]
+            "@utils/*": ["utils/*"],
+            "@exceptions/*": ["exceptions/*"]
         }
     }
 }
