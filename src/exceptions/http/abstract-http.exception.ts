@@ -1,16 +1,12 @@
 import { HttpStatus } from "@enums/http-status.enum";
 import { isObject, isString, removeUndefined } from "@utils/shared.util";
 
-export type HttpExceptionRequest =
-    | string
-    | {
-          message: string;
-          field?: string;
-      };
+export type HttpExceptionRequest = string | ErrorPayload | ErrorPayload[];
 
 export interface ErrorPayload {
     message: string;
     field?: string;
+    code?: string | number;
 }
 
 export interface HttpExceptionResponse {
@@ -66,7 +62,7 @@ export abstract class AbstractHttpException extends Error {
 
         return {
             status: this.statusCode,
-            errors: [errorPayload],
+            errors: errorPayload,
         };
     }
 }
