@@ -10,6 +10,7 @@ import { ServeStaticOptions } from "@interfaces/http/serve-static-options.interf
 import { NotFoundException } from "@exceptions/http/not-found.exception";
 import { AbstractHttpException } from "@exceptions/http/abstract-http.exception";
 import { InternalServerErrorException } from "@exceptions/http/internal-server-error.exception";
+import { BadRequestException } from "@exceptions/http/bad-request.exception";
 
 export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Response> {
     private routerMethodFactory: RouterMethodFactory;
@@ -62,6 +63,7 @@ export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Respon
             return res.status(internal.getStatusCode()).json(internal.getResponse());
         };
 
+        this.use(this.handleJsonSyntax());
         this.use(handler);
     }
 
@@ -69,6 +71,16 @@ export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Respon
         this.all("*", () => {
             throw new NotFoundException("Resource not found");
         });
+    }
+
+    private handleJsonSyntax() {
+        return (err: Error, _req: Request, _res: Response, next: Function): void => {
+            if (err instanceof SyntaxError && "body" in err) {
+                throw new BadRequestException("Payload invalid");
+            }
+
+            next(err);
+        };
     }
 
     public getLocal(key: string): any;
