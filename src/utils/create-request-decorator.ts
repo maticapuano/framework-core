@@ -10,17 +10,16 @@ export const createRequest = (options: RequestDecoratorOptions): MethodDecorator
     const requestMethod = options[Constants.Method] || RequestMethod.GET;
 
     return (target: object, key: any, descriptor: TypedPropertyDescriptor<any>) => {
-        const originalMethod = descriptor.value;
+        const metadata = Reflect.getMetadata(Constants.Request, target) || [];
+        const handler = descriptor.value;
 
-        const metadata = {
+        metadata.push({
             path,
-            requestMethod,
-            handler: originalMethod,
-        };
+            method: requestMethod,
+            handler,
+        });
 
-        Reflect.defineMetadata(Constants.Request, metadata, target, key);
-        Reflect.defineMetadata(Constants.Path, path, target, key);
-        Reflect.defineMetadata(Constants.Method, requestMethod, target, key);
+        Reflect.defineMetadata(Constants.Request, metadata, target);
 
         return descriptor;
     };
