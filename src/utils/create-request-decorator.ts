@@ -12,10 +12,13 @@ export const createRequest = (options: RequestDecoratorOptions): MethodDecorator
     return (target: object, key: any, descriptor: TypedPropertyDescriptor<any>) => {
         const metadata = Reflect.getMetadata(Constants.Request, target) || [];
         const handler = descriptor.value;
+        const responseStatusCode =
+            Reflect.getMetadata(Constants.HttpStatusCode, target, key) || 200;
 
         metadata.push({
             path,
             method: requestMethod,
+            responseStatusCode,
             handler,
         });
 

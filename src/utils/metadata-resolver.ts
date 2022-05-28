@@ -1,10 +1,12 @@
 import { Constants } from "@enums/constants.enum";
+import { HttpStatus } from "@enums/http-status.enum";
 import { RequestMethod } from "@enums/request-method.enum";
 import { serializePath } from "./serialize-path";
 
 export interface ControllerMetadata {
     route: string;
     method: RequestMethod;
+    statusCode: HttpStatus;
     handler: Function;
 }
 
@@ -18,13 +20,14 @@ export class MetadataResolver {
             return [];
         }
 
-        metadata.forEach(({ path, method, handler }) => {
+        metadata.forEach(({ path, method, handler, ...rest }) => {
             const route = serializePath(`${controllerPath}/${path}`, true);
 
             controllerMetadata.push({
                 route,
                 method,
                 handler,
+                statusCode: rest.responseStatusCode,
             });
         });
 
