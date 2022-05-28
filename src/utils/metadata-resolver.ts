@@ -14,6 +14,10 @@ export class MetadataResolver {
         const metadata: any[] = Reflect.getMetadata(Constants.Request, target.prototype) || [];
         const controllerMetadata: ControllerMetadata[] = [];
 
+        if (!controllerPath) {
+            return [];
+        }
+
         metadata.forEach(({ path, method, handler }) => {
             const route = serializePath(`${controllerPath}/${path}`, true);
 
