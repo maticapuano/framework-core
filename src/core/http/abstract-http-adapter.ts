@@ -6,6 +6,9 @@ import {
     RequestHandler,
 } from "@interfaces/http/http-server.interface";
 import { ServeStaticOptions } from "@interfaces/http/serve-static-options.interface";
+import { ControllerMetadata } from "@utils/metadata-resolver";
+import { serializePath } from "@utils/serialize-path";
+import { RouterHandlerProxyFactory } from "router/router-handler-proxy";
 
 export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TResponse = any>
     implements HttpServer<TRequest, TResponse>
@@ -84,6 +87,16 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
 
     public getInstance<T = any>(): T {
         return this.instance as T;
+    }
+
+    public setRoutesMetadata(prefix: string, metadata: ControllerMetadata[]): void {
+        const routerProxy = new RouterHandlerProxyFactory();
+
+        metadata.forEach(({ method, ...meta }) => {
+            const path = serializePath(`/${prefix}/${meta.route}`, true);
+
+            this.instance[method](path, routerProxy.create(meta.handler));
+        });
     }
 
     abstract initHttpServer(): void;

@@ -1,4 +1,5 @@
 import { CorsOptions } from "@interfaces/external/cors-options.interface";
+import { ControllerMetadata } from "@utils/metadata-resolver";
 import { RequestMethod } from "enums/request-method.enum";
 import { ServeStaticOptions } from "./serve-static-options.interface";
 
@@ -64,4 +65,5 @@ export interface HttpServer<TRequest = any, TResponse = any> {
     getLocal(key: string): any;
     getLocal<T>(key: string): T;
     getLocal<T>(key: string, defaultValue: T): T;
+    setRoutesMetadata(prefix: string, metadata: ControllerMetadata[]): void;
 }
