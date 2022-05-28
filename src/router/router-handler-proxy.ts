@@ -1,21 +1,25 @@
-export type RouterHandlerProxy = <TRequest, TResponse>(
-    req?: TRequest,
-    res?: TResponse,
-    next?: () => void,
-) => void;
-
 export class RouterHandlerProxyFactory {
-    public create(target: RouterHandlerProxy) {
-        return async <TRequest, TResponse>(
-            req: TRequest,
-            res: TResponse,
-            next: (...args: any[]) => void,
-        ): Promise<void> => {
+    private statusCode = 200;
+
+    public create(handler: Function) {
+        return async (req: any, res: any, next: any): Promise<any> => {
             try {
-                await target(req, res, next);
-            } catch (e) {
-                next(e);
+                const result = await handler();
+
+                if (result instanceof Promise) {
+                    return result;
+                }
+
+                return res.status(this.statusCode).send(result);
+            } catch (err) {
+                next(err);
             }
         };
+    }
+
+    public setStatusCode(statusCode: number): this {
+        this.statusCode = statusCode;
+
+        return this;
     }
 }
