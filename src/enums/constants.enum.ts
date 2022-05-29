@@ -3,5 +3,6 @@ export enum Constants {
     Path = "path",
     Method = "method",
     HttpStatusCode = "httpStatusCode",
+    Header = "header",
     Request = "request",
 }

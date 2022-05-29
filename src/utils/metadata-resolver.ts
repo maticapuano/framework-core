@@ -3,6 +3,12 @@ import { HttpStatus } from "@enums/http-status.enum";
 import { RequestMethod } from "@enums/request-method.enum";
 import { serializePath } from "./serialize-path";
 
+interface HeaderMetadata {
+    key: string;
+    value: string;
+    propertyKey: string;
+}
+
 export interface ControllerMetadata {
     route: string;
     method: RequestMethod;
@@ -10,6 +16,7 @@ export interface ControllerMetadata {
     handler: Function;
     propertyKey: string;
     originalTarget: Function;
+    headers: HeaderMetadata[];
 }
 
 export class MetadataResolver {

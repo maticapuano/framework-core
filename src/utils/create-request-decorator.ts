@@ -14,12 +14,14 @@ export const createRequest = (options: RequestDecoratorOptions): MethodDecorator
         const handler = descriptor.value;
         const responseStatusCode =
             Reflect.getMetadata(Constants.HttpStatusCode, target, key) || 200;
+        const headers = Reflect.getMetadata(Constants.Header, target, key) || [];
 
         metadata.push({
             path,
             method: requestMethod,
             responseStatusCode,
             handler,
+            headers,
             propertyKey: key,
         });
 
