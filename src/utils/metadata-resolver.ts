@@ -8,6 +8,8 @@ export interface ControllerMetadata {
     method: RequestMethod;
     statusCode: HttpStatus;
     handler: Function;
+    propertyKey: string;
+    originalTarget: Function;
 }
 
 export class MetadataResolver {
@@ -28,6 +30,8 @@ export class MetadataResolver {
                 method,
                 handler,
                 statusCode: rest.responseStatusCode,
+                originalTarget: target,
+                ...rest,
             });
         });
 

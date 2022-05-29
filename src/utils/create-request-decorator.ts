@@ -20,6 +20,7 @@ export const createRequest = (options: RequestDecoratorOptions): MethodDecorator
             method: requestMethod,
             responseStatusCode,
             handler,
+            propertyKey: key,
         });
 
         Reflect.defineMetadata(Constants.Request, metadata, target);
