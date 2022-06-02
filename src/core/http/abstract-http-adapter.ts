@@ -1,3 +1,4 @@
+import { HttpStatus } from "@enums/http-status.enum";
 import { RequestMethod } from "@enums/request-method.enum";
 import { CorsOptions } from "@interfaces/external/cors-options.interface";
 import {
@@ -111,4 +112,6 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     abstract getLocal<T>(key: string, defaultValue: T): T;
     abstract setLocal(key: string, value: any): this;
     abstract useStaticAssets(path: string, options: ServeStaticOptions): void;
+    abstract status(response: any, status: HttpStatus): this;
+    abstract setHeader(response: any, name: string, value: string): this;
 }

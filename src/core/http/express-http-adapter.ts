@@ -11,6 +11,7 @@ import { NotFoundException } from "@exceptions/http/not-found.exception";
 import { AbstractHttpException } from "@exceptions/http/abstract-http.exception";
 import { InternalServerErrorException } from "@exceptions/http/internal-server-error.exception";
 import { BadRequestException } from "@exceptions/http/bad-request.exception";
+import { HttpStatus } from "@enums/http-status.enum";
 
 export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Response> {
     private routerMethodFactory: RouterMethodFactory;
@@ -100,5 +101,13 @@ export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Respon
         options.prefix
             ? this.instance.use(options.prefix, express.static(path, options))
             : this.instance.use(express.static(path, options));
+    }
+
+    public status(response: any, status: HttpStatus): this {
+        return response.status(status);
+    }
+
+    public setHeader(response: any, name: string, value: string): this {
+        return response.set(name, value);
     }
 }
