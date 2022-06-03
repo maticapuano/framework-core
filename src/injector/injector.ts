@@ -35,10 +35,27 @@ export class Injector {
         const tokenString = typeof token === "string" ? token : token.name;
 
         if (token instanceof Function) {
+            const injectionsByTokens =
+                Reflect.getMetadata("self:properties_metadata", token.constructor) || [];
+
+            const injections = injectionsByTokens.map((injection: any) => {
+                const injectionToken = injection.token;
+                const injectionTokenString =
+                    typeof injectionToken === "string" ? injectionToken : injectionToken.name;
+
+                if (!this._container.has(injectionTokenString)) {
+                    throw new InjectorError(
+                        `Injector: Sorry, but you can't resolve ${injectionTokenString}`,
+                    );
+                }
+
+                return this.resolve(injectionToken);
+            });
+
             const dependencies: any[] = Reflect.getMetadata("design:paramtypes", token) || [];
             const instances = dependencies.map(dependency => this.resolve(dependency));
 
-            const instance = new token(...instances);
+            const instance = new token(...instances, ...injections);
 
             this._container.set(tokenString, instance);
 
