@@ -19,7 +19,9 @@
             "@interfaces/*": ["interfaces/*"],
             "@enums/*": ["enums/*"],
             "@utils/*": ["utils/*"],
-            "@exceptions/*": ["exceptions/*"]
+            "@exceptions/*": ["exceptions/*"],
+            "@injector/*": ["injector/*"],
+            "@router/*": ["router/*"]
         }
     }
 }
