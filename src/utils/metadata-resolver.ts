@@ -1,6 +1,7 @@
 import { Constants } from "@enums/constants.enum";
 import { HttpStatus } from "@enums/http-status.enum";
 import { RequestMethod } from "@enums/request-method.enum";
+import { container } from "@injector/container";
 import { serializePath } from "./serialize-path";
 
 interface HeaderMetadata {
@@ -41,6 +42,8 @@ export class MetadataResolver {
                 ...rest,
             });
         });
+
+        container.register(target.name, target);
 
         return controllerMetadata;
     }
