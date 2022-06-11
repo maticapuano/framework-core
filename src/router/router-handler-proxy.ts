@@ -1,3 +1,4 @@
+import { RouteParamType } from "@enums/route-param-type.enum";
 import { ParameterDecoratorMetadata } from "@interfaces/decorators/parameter-decorator-metadata";
 import { RouteParamFactory } from "./route-param-factory";
 
@@ -14,6 +15,14 @@ export class RouterHandlerProxyFactory {
 
                 const headersKeys = Object.keys(this.headers);
                 headersKeys.forEach(key => res.setHeader(key, this.headers[key]));
+
+                const hasCustomResponse = this.parameters.some(
+                    ({ type }) => type === RouteParamType.RESPONSE,
+                );
+
+                if (hasCustomResponse) {
+                    return result;
+                }
 
                 return res.status(this.statusCode).send(result);
             } catch (err) {
