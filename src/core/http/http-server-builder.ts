@@ -51,6 +51,7 @@ export class HttpServerBuilder {
             rest.headers.forEach(({ key, value }) => routerProxy.setHeader(key, value));
 
             routerProxy.setStatusCode(statusCode);
+            routerProxy.addParameter(rest.parameters);
 
             const handler = routerProxy.setStatusCode(statusCode).create(handlerRouter);
             const route = serializePath(`/${this._prefix}/${rest.route}`, true);

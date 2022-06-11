@@ -2,6 +2,7 @@ import { Constants } from "@enums/constants.enum";
 import { HttpStatus } from "@enums/http-status.enum";
 import { RequestMethod } from "@enums/request-method.enum";
 import { container } from "@injector/container";
+import { ParameterDecoratorMetadata } from "@interfaces/decorators/parameter-decorator-metadata";
 import { serializePath } from "./serialize-path";
 
 interface HeaderMetadata {
@@ -18,6 +19,7 @@ export interface ControllerMetadata {
     propertyKey: string;
     originalTarget: Function;
     headers: HeaderMetadata[];
+    parameters: ParameterDecoratorMetadata[];
 }
 
 export class MetadataResolver {
@@ -31,6 +33,8 @@ export class MetadataResolver {
         }
 
         metadata.forEach(({ path, method, handler, ...rest }) => {
+            const parameters =
+                Reflect.getMetadata(Constants.Params, target.prototype, rest.propertyKey) || [];
             const route = serializePath(`${controllerPath}/${path}`, true);
 
             controllerMetadata.push({
@@ -39,6 +43,7 @@ export class MetadataResolver {
                 handler,
                 statusCode: rest.responseStatusCode,
                 originalTarget: target,
+                parameters,
                 ...rest,
             });
         });
