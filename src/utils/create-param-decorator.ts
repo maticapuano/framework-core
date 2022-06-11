@@ -6,7 +6,7 @@ export const createParamDecorator = (type: RouteParamType) => {
     return (name?: string): ParameterDecorator => {
         return (target: any, propertyKey: string | symbol, index: number) => {
             const metadata: ParameterDecoratorMetadata[] =
-                Reflect.getMetadata("params", target.constructor) || [];
+                Reflect.getMetadata("params", target, propertyKey) || [];
 
             metadata.push({
                 target,
@@ -16,7 +16,7 @@ export const createParamDecorator = (type: RouteParamType) => {
                 propertyKey,
             });
 
-            Reflect.defineMetadata(Constants.Params, metadata, target.constructor);
+            Reflect.defineMetadata(Constants.Params, metadata, target, propertyKey);
         };
     };
 };
