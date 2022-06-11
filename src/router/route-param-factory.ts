@@ -29,6 +29,8 @@ export class RouteParamFactory {
                 return req[data || "file"];
             case RouteParamType.FILES:
                 return req.files;
+            case RouteParamType.REMOTE_IP:
+                return req.ip;
             default:
                 return null;
         }
