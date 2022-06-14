@@ -20,6 +20,7 @@ export interface ControllerMetadata {
     originalTarget: Function;
     headers: HeaderMetadata[];
     parameters: ParameterDecoratorMetadata[];
+    middlewares: Function[];
 }
 
 export class MetadataResolver {
@@ -32,10 +33,19 @@ export class MetadataResolver {
             return [];
         }
 
+        const middlewares = Reflect.getMetadata(Constants.Middleware, target) || [];
+
         metadata.forEach(({ path, method, handler, ...rest }) => {
             const parameters =
                 Reflect.getMetadata(Constants.Params, target.prototype, rest.propertyKey) || [];
             const route = serializePath(`${controllerPath}/${path}`, true);
+
+            const middlewaresByPropertyKey =
+                Reflect.getMetadata(Constants.Middleware, target.prototype, rest.propertyKey) || [];
+
+            if (middlewaresByPropertyKey.length > 0) {
+                middlewares.push(...middlewaresByPropertyKey);
+            }
 
             controllerMetadata.push({
                 route,
@@ -44,6 +54,7 @@ export class MetadataResolver {
                 statusCode: rest.responseStatusCode,
                 originalTarget: target,
                 parameters,
+                middlewares,
                 ...rest,
             });
         });
