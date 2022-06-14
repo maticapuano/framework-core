@@ -55,8 +55,9 @@ export class HttpServerBuilder {
 
             const handler = routerProxy.setStatusCode(statusCode).create(handlerRouter);
             const route = serializePath(`/${this._prefix}/${rest.route}`, true);
+            const middlewares = rest.middlewares;
 
-            this._httpAdapter[method](route, handler);
+            this._httpAdapter[method](route, middlewares, handler);
         });
     }
 

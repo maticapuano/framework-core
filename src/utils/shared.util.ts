@@ -1,4 +1,5 @@
 import { sync } from "glob";
+import { Constructor } from "types/constructor.type";
 
 export const isString = (value: any): value is string => typeof value === "string";
 export const isObject = (value: any): value is object =>
@@ -50,4 +51,16 @@ export const getSourceFiles = (files: string | Array<string>): string[] => {
     });
 
     return Array.from(result);
+};
+
+export const existMethodFromPrototype = <T = any>(
+    name: string,
+    prototype: Constructor<T>,
+): boolean => {
+    const prototypeMethods = Object.getOwnPropertyNames(prototype);
+    const prototypeMethod = prototypeMethods.find(method => method === name);
+    const isMethodExist = !!prototypeMethod;
+    const isMethodFromPrototype = prototypeMethods.includes(name);
+
+    return isMethodExist && isMethodFromPrototype;
 };
