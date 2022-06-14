@@ -21,6 +21,7 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     public get(handler: RequestHandler<TRequest, TResponse>): any;
     public get(path: string, handler: RequestHandler<TRequest, TResponse>): any;
     public get(path: string, ...handlers: RequestHandler<TRequest, TResponse>[]): any;
+    public get(path: any, ...rest: any[]): any;
     public get(path: any, handler?: any, ...rest: any[]): any {
         return this.instance.get(path, handler, ...rest);
     }
@@ -28,6 +29,7 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     public post(handler: RequestHandler<TRequest, TResponse>): any;
     public post(path: string, handler: RequestHandler<TRequest, TResponse>): any;
     public post(path: string, ...handlers: RequestHandler<TRequest, TResponse>[]): any;
+    public post(path: any, ...rest: any[]): any;
     public post(path: any, handler?: any, ...rest: any[]): any {
         return this.instance.post(path, handler, ...rest);
     }
@@ -35,6 +37,7 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     public put(handler: RequestHandler<TRequest, TResponse>): any;
     public put(path: string, handler: RequestHandler<TRequest, TResponse>): any;
     public put(path: string, ...handlers: RequestHandler<TRequest, TResponse>[]): any;
+    public put(path: any, ...rest: any[]): any;
     public put(path: any, handler?: any, ...rest: any[]): any {
         return this.instance.put(path, handler, ...rest);
     }
@@ -42,6 +45,7 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     public patch(handler: RequestHandler<TRequest, TResponse>): any;
     public patch(path: string, handler: RequestHandler<TRequest, TResponse>): any;
     public patch(path: string, ...handlers: RequestHandler<TRequest, TResponse>[]): any;
+    public patch(path: any, ...rest: any[]): any;
     public patch(path: any, handler?: any, ...rest: any[]): any {
         return this.instance.patch(path, handler, ...rest);
     }
@@ -49,6 +53,7 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     public delete(handler: RequestHandler<TRequest, TResponse>): any;
     public delete(path: string, handler: RequestHandler<TRequest, TResponse>): any;
     public delete(path: string, ...handlers: RequestHandler<TRequest, TResponse>[]): any;
+    public delete(path: any, ...rest: any[]): any;
     public delete(path: any, handler?: any, ...rest: any[]): any {
         return this.instance.delete(path, handler, ...rest);
     }
@@ -56,6 +61,7 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     public head(handler: RequestHandler<TRequest, TResponse>): any;
     public head(path: string, handler: RequestHandler<TRequest, TResponse>): any;
     public head(path: string, ...handlers: RequestHandler<TRequest, TResponse>[]): any;
+    public head(path: any, ...rest: any[]): any;
     public head(path: any, handler?: any, ...rest: any[]): any {
         return this.instance.head(path, handler, ...rest);
     }
@@ -63,6 +69,7 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     public options(handler: RequestHandler<TRequest, TResponse>): any;
     public options(path: string, handler: RequestHandler<TRequest, TResponse>): any;
     public options(path: string, ...handlers: RequestHandler<TRequest, TResponse>[]): any;
+    public options(path: any, ...rest: any[]): any;
     public options(path: any, handler?: any, ...rest: any[]): any {
         return this.instance.options(path, handler, ...rest);
     }
@@ -70,6 +77,7 @@ export abstract class AbstractHttpAdapter<TServer = any, TRequest = any, TRespon
     public all(handler: RequestHandler<TRequest, TResponse>): any;
     public all(path: string, handler: RequestHandler<TRequest, TResponse>): any;
     public all(path: string, ...handlers: RequestHandler<TRequest, TResponse>[]): any;
+    public all(path: any, ...rest: any[]): any;
     public all(path: any, handler?: any, ...rest: any[]): any {
         return this.instance.all(path, handler, ...rest);
     }
