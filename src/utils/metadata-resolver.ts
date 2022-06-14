@@ -4,7 +4,7 @@ import { RequestMethod } from "@enums/request-method.enum";
 import { container } from "@injector/container";
 import { ParameterDecoratorMetadata } from "@interfaces/decorators/parameter-decorator-metadata";
 import { MiddlewareInterface } from "@interfaces/http/middleware.interface";
-import { Constructor } from "types/constructor.type";
+import { Constructor } from "../types/constructor.type";
 import { serializePath } from "./serialize-path";
 import { existMethodFromPrototype } from "./shared.util";
 
