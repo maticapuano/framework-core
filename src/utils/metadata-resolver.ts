@@ -46,7 +46,7 @@ export class MetadataResolver {
 
                 const middlewareInstance = container.resolve<MiddlewareInterface>(middleware.name);
 
-                middlewares[index] = middlewareInstance.use;
+                middlewares[index] = middlewareInstance.use.bind(middlewareInstance);
             }
         });
 
@@ -55,12 +55,26 @@ export class MetadataResolver {
                 Reflect.getMetadata(Constants.Params, target.prototype, rest.propertyKey) || [];
             const route = serializePath(`${controllerPath}/${path}`, true);
 
-            const middlewaresByPropertyKey =
+            const middlewareMethod =
                 Reflect.getMetadata(Constants.Middleware, target.prototype, rest.propertyKey) || [];
 
-            if (middlewaresByPropertyKey.length > 0) {
-                middlewares.push(...middlewaresByPropertyKey);
-            }
+            middlewareMethod.forEach((middleware: Constructor<any>, index: number) => {
+                const existMethod = existMethodFromPrototype("use", middleware.prototype);
+
+                if (existMethod) {
+                    container.register(middleware.name, middleware);
+
+                    const middlewareInstance = container.resolve<MiddlewareInterface>(
+                        middleware.name,
+                    );
+
+                    middlewareMethod[index] = middlewareInstance.use.bind(middlewareInstance);
+
+                    return;
+                }
+
+                middlewareMethod[index] = middleware;
+            });
 
             controllerMetadata.push({
                 route,
@@ -69,7 +83,7 @@ export class MetadataResolver {
                 statusCode: rest.responseStatusCode,
                 originalTarget: target,
                 parameters,
-                middlewares,
+                middlewares: [...middlewares, ...middlewareMethod],
                 ...rest,
             });
         });
