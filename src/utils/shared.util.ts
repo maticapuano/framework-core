@@ -64,3 +64,11 @@ export const existMethodFromPrototype = <T = any>(
 
     return isMethodExist && isMethodFromPrototype;
 };
+
+export const isPlainObject = (obj: any): boolean => {
+    return (
+        Object.prototype.toString.call(obj) === "[object Object]" &&
+        Object.prototype.toString.call(obj.constructor) === "[object Function]" &&
+        Object.prototype.toString.call(obj.constructor.prototype) === "[object Object]"
+    );
+};
