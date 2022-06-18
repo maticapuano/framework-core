@@ -12,14 +12,17 @@ import { AbstractHttpException } from "@exceptions/http/abstract-http.exception"
 import { InternalServerErrorException } from "@exceptions/http/internal-server-error.exception";
 import { BadRequestException } from "@exceptions/http/bad-request.exception";
 import { HttpStatus } from "@enums/http-status.enum";
+import { Logger } from "@services/logger/logger";
 
 export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Response> {
     private routerMethodFactory: RouterMethodFactory;
+    private logger: Logger;
 
     public constructor() {
         super(express());
 
         this.routerMethodFactory = new RouterMethodFactory();
+        this.logger = new Logger(ExpressHttpAdapter.name);
     }
 
     public initHttpServer(): void {
@@ -58,6 +61,8 @@ export class ExpressHttpAdapter extends AbstractHttpAdapter<any, Request, Respon
             if (err instanceof AbstractHttpException) {
                 return res.status(err.getStatusCode()).json(err.getResponse());
             }
+
+            this.logger.error(err);
 
             const internal = new InternalServerErrorException("Internal server error");
 

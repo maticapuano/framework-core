@@ -1,6 +1,6 @@
 import { Injectable } from "../../decorators/injectable.decorator";
 import { colorCli, Colors } from "@utils/color-cli";
-import { isPlainObject } from "@utils/shared.util";
+import { isArray, isPlainObject } from "@utils/shared.util";
 import { LoggerLevel } from "./utils";
 
 @Injectable()
@@ -82,7 +82,10 @@ export class Logger {
     }
 
     protected getInstance(): Logger | Logger | undefined {
-        return new Logger(this.context);
+        const { instance } = Logger as any;
+        const result = instance === this;
+
+        return result ? Logger : instance;
     }
 
     private static printMessage(
@@ -91,9 +94,13 @@ export class Logger {
         context = "",
         writeStreamType?: "stdout" | "stderr",
     ): void {
-        const output = isPlainObject(message)
+        let output = isPlainObject(message)
             ? `${colorCli("Object:", "green")} ${JSON.stringify(message)}\n`
             : colorCli(message, color);
+
+        if (isArray(message)) {
+            output = `${colorCli("Array:", "green")} ${JSON.stringify(message)}`;
+        }
 
         const pidMessage = colorCli(`[CORE] ${process.pid}   - `, "gray");
         const contextMessage = context ? colorCli(`[${context}] `, "blue") : "";

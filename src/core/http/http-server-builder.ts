@@ -6,14 +6,17 @@ import { container } from "@injector/container";
 import { RouterHandlerProxyFactory } from "router/router-handler-proxy";
 import { Constructor } from "../../types/constructor.type";
 import { ExpressHttpAdapter } from "./express-http-adapter";
+import { Logger } from "@services/logger/logger";
 
 export class HttpServerBuilder {
     private readonly _httpAdapter: ExpressHttpAdapter;
     private _metadataResolver: ControllerMetadata[] = [];
     private _prefix = "/";
+    private logger: Logger;
 
     public constructor() {
         this._httpAdapter = new ExpressHttpAdapter();
+        this.logger = new Logger(HttpServerBuilder.name);
     }
 
     public setCors(options: CorsOptions): this {
@@ -58,6 +61,9 @@ export class HttpServerBuilder {
             const middlewares = rest.middlewares;
 
             this._httpAdapter[method](route, middlewares, handler);
+
+            this.logger.log(`Router prefix: ${this._prefix}`);
+            this.logger.log(`${method.toUpperCase()} ${rest.route}`);
         });
     }
 

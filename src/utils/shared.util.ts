@@ -65,10 +65,23 @@ export const existMethodFromPrototype = <T = any>(
     return isMethodExist && isMethodFromPrototype;
 };
 
-export const isPlainObject = (obj: any): boolean => {
+export const isPlainObject = (fn: any): fn is object => {
+    if (!isObject(fn)) {
+        return false;
+    }
+
+    const proto = Object.getPrototypeOf(fn);
+
+    if (!proto) {
+        return true;
+    }
+
+    const constructor =
+        Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
+
     return (
-        Object.prototype.toString.call(obj) === "[object Object]" &&
-        Object.prototype.toString.call(obj.constructor) === "[object Function]" &&
-        Object.prototype.toString.call(obj.constructor.prototype) === "[object Object]"
+        typeof constructor === "function" &&
+        constructor instanceof constructor &&
+        Function.prototype.toString.call(constructor) === Function.prototype.toString.call(Object)
     );
 };
