@@ -7,16 +7,18 @@ import { RouterHandlerProxyFactory } from "router/router-handler-proxy";
 import { Constructor } from "../../types/constructor.type";
 import { ExpressHttpAdapter } from "./express-http-adapter";
 import { Logger } from "@services/logger/logger";
+import { PipeTransform } from "@interfaces/pipes/pipe-transform";
 
 export class HttpServerBuilder {
     private readonly _httpAdapter: ExpressHttpAdapter;
     private _metadataResolver: ControllerMetadata[] = [];
+    private _globalPipes: any[] = [];
     private _prefix = "/";
-    private logger: Logger;
+    private _logger: Logger;
 
     public constructor() {
         this._httpAdapter = new ExpressHttpAdapter();
-        this.logger = new Logger(HttpServerBuilder.name);
+        this._logger = new Logger(HttpServerBuilder.name);
     }
 
     public setCors(options: CorsOptions): this {
@@ -55,6 +57,7 @@ export class HttpServerBuilder {
 
             routerProxy.setStatusCode(statusCode);
             routerProxy.addParameter(rest.parameters);
+            routerProxy.addGlobalPipes(this._globalPipes);
 
             const handler = routerProxy.setStatusCode(statusCode).create(handlerRouter);
             const route = serializePath(`/${this._prefix}/${rest.route}`, true);
@@ -62,14 +65,22 @@ export class HttpServerBuilder {
 
             this._httpAdapter[method](route, middlewares, handler);
 
-            this.logger.log(`Router prefix: ${this._prefix}`);
-            this.logger.log(`${method.toUpperCase()} ${rest.route}`);
+            this._logger.log(`${method.toUpperCase()} ${rest.route}`);
         });
+    }
+
+    public setGlobalPipe(...pipe: PipeTransform[] | Function[]): this {
+        this._globalPipes.push(...pipe);
+
+        return this;
     }
 
     public build(): ExpressHttpAdapter {
         this._httpAdapter.initHttpServer();
         this._httpAdapter.setParserMiddleware();
+
+        this._logger.log(`Prefix: ${this._prefix}`);
+        this._logger.log("Discovering controllers...");
 
         this.setRoutesFromMetadata(this._metadataResolver);
 
