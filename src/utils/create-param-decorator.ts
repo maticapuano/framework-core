@@ -16,6 +16,7 @@ export const createParamDecorator = (type: RouteParamType) => {
                 index,
                 propertyKey,
                 pipes,
+                paramType: Reflect.getMetadata("design:paramtypes", target, propertyKey)[index],
             });
 
             Reflect.defineMetadata(Constants.Params, metadata, target, propertyKey);

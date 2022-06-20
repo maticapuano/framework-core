@@ -1,6 +1,7 @@
 import { RouteParamType } from "@enums/route-param-type.enum";
 import { container } from "@injector/container";
 import { ParameterDecoratorMetadata } from "@interfaces/decorators/parameter-decorator-metadata";
+import { PipeArgumentMetadata } from "@interfaces/pipes/pipe-argument-metadata";
 import { PipeTransform } from "@interfaces/pipes/pipe-transform";
 import { existMethodFromPrototype } from "@utils/shared.util";
 import { RouteParamFactory } from "./route-param-factory";
@@ -62,7 +63,7 @@ export class RouterHandlerProxyFactory {
     public getParametersFromRequest(req: any, res: any, next: any): any[] {
         const args: any[] = [];
 
-        this.parameters.forEach(({ type, name, index, pipes }) => {
+        this.parameters.forEach(({ type, name, index, pipes, paramType }) => {
             const request = { req, res, next };
             const paramFactory = new RouteParamFactory();
             const result = paramFactory.create(type, name, request);
@@ -72,14 +73,36 @@ export class RouterHandlerProxyFactory {
             args[index] = result;
 
             for (const pipe of pipes) {
-                args[index] = this.applyPipe(pipe, args[index]);
+                const argument = this.parsePipeArgument(result, type, paramType);
+
+                args[index] = this.applyPipe(pipe, args[index], argument);
             }
         });
 
         return args;
     }
 
-    private applyPipe(pipe: PipeTransform | Function, value: any): any {
+    private parsePipeArgument(data: any, type: any, paramType: any): PipeArgumentMetadata {
+        const pipeType: any = {
+            [RouteParamType.BODY]: "body",
+            [RouteParamType.QUERY]: "query",
+            [RouteParamType.PARAM]: "param",
+        };
+
+        const response: PipeArgumentMetadata = {
+            data,
+            type: pipeType[type] || "custom",
+            metadataType: paramType,
+        };
+
+        return response;
+    }
+
+    private applyPipe(
+        pipe: PipeTransform | Function,
+        value: any,
+        argument: PipeArgumentMetadata,
+    ): any {
         if (pipe instanceof Function) {
             const existTransform = existMethodFromPrototype("transform", pipe.prototype);
 
@@ -89,9 +112,9 @@ export class RouterHandlerProxyFactory {
 
             const pipeInstance = container.resolve<PipeTransform>(pipe as any);
 
-            return pipeInstance.transform(value);
+            return pipeInstance.transform(value, argument);
         }
 
-        return pipe.transform(value);
+        return pipe.transform(value, argument);
     }
 }

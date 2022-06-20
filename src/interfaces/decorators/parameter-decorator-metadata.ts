@@ -8,4 +8,5 @@ export interface ParameterDecoratorMetadata {
     index: number;
     propertyKey: string | symbol;
     pipes: PipeTransform[] | Function[];
+    paramType: any;
 }
